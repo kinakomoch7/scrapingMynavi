@@ -1,0 +1,30 @@
+name: "Scraping Mynavi" # Actionの名前
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Scraping Mynavi job listing data. and Add NeonDB"
+        required: false
+        type: boolean
+
+  schedule:
+    - cron: "0 15 * * *" # 毎日24時に実行
+
+jobs:
+  run-index-js:
+    name: Run index.js
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run index.js
+        run: node index.js
