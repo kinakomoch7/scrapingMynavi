@@ -1,19 +1,11 @@
 const sql = require("./neonDB.js");
 
 const addData = async (props) => {
-  const { name, deadline, industry } = props;
+  const { name, deadline, industry, link } = props;
 
   try {
-    const res = await sql`SELECT * FROM job_listings WHERE name = ${name}`;
-
-    // すでにデータが存在する場合は追加しない
-    if (res.length > 0) {
-      console.log(`already exists`);
-      return;
-    }
-
     // データを追加
-    await sql`INSERT INTO job_listings (name, deadline, industry ) VALUES (${name}, ${deadline}, ${industry})`;
+    await sql`INSERT INTO job_listings (name, deadline, industry, link ) VALUES (${name}, ${deadline}, ${industry}, ${link})`;
     console.log(`success`);
   } catch (e) {
     console.error(e);

@@ -1,10 +1,12 @@
 const puppeteer = require("puppeteer");
 const addData = require("./components/addData");
+const deleteData = require("./components/deleteData");
 
 !(async () => {
+  deleteData();
+  const url =
+    "https://job.mynavi.jp/26/pc/corpinfo/displayCorpSearchByIs/doSearchOther?industryCtgCd=64";
   try {
-    const url =
-      "https://job.mynavi.jp/26/pc/corpinfo/displayCorpSearchByIs/doSearchOther?industryCtgCd=64";
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -33,21 +35,22 @@ const addData = require("./components/addData");
           name: companyCards[index].title,
           deadline: companyCards[index].deadlines,
           industry: companyCards[index].industries,
+          link: companyCards[index].link,
         });
       }
 
       // ページネーションのリンクをクリックできるか判定
       const nextPageLink = await page.$("li.right > a");
       if (!nextPageLink) {
-        break; // 次のページリンクが存在しない場合ループを終了
+        console.log("end"); // デバッグ用
+        await browser.close();
+        process.exit();
       }
 
       // 次のページのリンクをクリック
       await nextPageLink.click();
       await page.waitForNavigation({ waitUntil: "networkidle0" });
     }
-
-    await browser.close();
   } catch (e) {
     console.error(e);
   }
